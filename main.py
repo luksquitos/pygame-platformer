@@ -4,7 +4,7 @@ import sys
 py.init()
 
 py.display.set_caption("ninja game")
-screen = py.display.set_mode((640, 640))
+screen = py.display.set_mode((640, 480))
 
 clock = py.time.Clock()
 
