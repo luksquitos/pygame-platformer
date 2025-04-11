@@ -2,7 +2,7 @@ import pygame as pg
 import sys
 from player import Player, Enemy
 
-
+objects_in_memory = []
 class Game:
     def __init__(self):
         pg.init()
@@ -11,15 +11,15 @@ class Game:
         self.screen = pg.display.set_mode((640, 480))
         self.clock = pg.time.Clock()
         self.player = Player(x_pos=100)
-        self.enemies = []
             
     def run(self):
         while True:
             
             self.screen.fill((14, 219, 248)) # Usado para "limpar a tela"
+            print("Quantidade de objetos na memória ", len(objects_in_memory))
             
-            self.generate_enemies()
-            print("quantidade de objetos", len(self.enemies))
+            # self.generate_enemies()
+            # print("quantidade de objetos", len(objects_in_memory))
             
             self.blit_objects()
             # self.screen.blit(
@@ -44,14 +44,14 @@ class Game:
             (self.player.x_pos, self.player.y_pos)
         )
         
-        self.player.update()
+        self.player.update(objects_in_memory)
         
-        for obj in self.enemies:
+        for obj in objects_in_memory:
             self.screen.blit(
                 obj.frame, 
                 (obj.x_pos, obj.y_pos)
             ) # "Por outra 'surface' por cima"
-            obj.update()
+            obj.update(objects_in_memory)
 
         
     def generate_enemies(self):
@@ -60,6 +60,6 @@ class Game:
         if num != 2:
             return
         
-        self.enemies.append(Enemy(x_pos=randint(100, 600)))
+        objects_in_memory.append(Enemy(x_pos=randint(100, 600)))
             
         

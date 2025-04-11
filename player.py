@@ -1,5 +1,6 @@
 import pygame as pg
 from random import randint
+from bullet import Rock
 
 class Entity:
     frame = None
@@ -10,11 +11,19 @@ class Entity:
         self.frame.set_colorkey((0, 0, 0))
         self.x_pos = x_pos
         self.y_pos = self.y
+        self.rect = pg.rect.Rect(self.x_pos, self.y, 80, 50)
         
         self.speed = 10
         
-    def update(self):
+    def update(self, objects_in_memory):
         self.move()
+        self.attack(objects_in_memory)
+        
+    def attack(self, objects_in_memory: list):
+        key_pressed = pg.key.get_pressed()
+
+        if key_pressed[pg.K_SPACE]:
+            objects_in_memory.append(Rock(self.x_pos, self.y_pos))
     
     def move(self):
         # print("OI")
@@ -47,6 +56,10 @@ class Enemy(Entity):
         
         if self.y_pos >= 480:
             self.delete = True
+            
+            
+    def attack(self, objects_in_memory):
+        return None
         
         
     
