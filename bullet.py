@@ -1,4 +1,5 @@
 import pygame as pg
+from delay import Delay
 
 
 class Rock:

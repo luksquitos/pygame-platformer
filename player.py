@@ -1,6 +1,7 @@
 import pygame as pg
 from random import randint
 from bullet import Rock
+from delay import Delay
 
 class Entity:
     frame = None
@@ -14,19 +15,23 @@ class Entity:
         self.rect = pg.rect.Rect(self.x_pos, self.y, 80, 50)
         
         self.speed = 10
+        self.attack_delay = None
         
     def update(self, objects_in_memory):
         self.move()
         self.attack(objects_in_memory)
         
     def attack(self, objects_in_memory: list):
+        if self.attack_delay:
+            return 
+        
         key_pressed = pg.key.get_pressed()
 
         if key_pressed[pg.K_SPACE]:
             objects_in_memory.append(Rock(self.x_pos, self.y_pos))
+            self.attack_delay = Delay(milliseconds=150)
     
     def move(self):
-        # print("OI")
         key_pressed = pg.key.get_pressed()
         
         if key_pressed[pg.K_w]:
