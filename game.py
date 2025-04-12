@@ -21,7 +21,7 @@ class Game:
             # self.generate_enemies()
             # print("quantidade de objetos", len(objects_in_memory))
             
-            self.blit_objects()
+            self.objects_update()
             # self.screen.blit(
             #     self.player.frame, 
             #     (self.player.x_pos, self.player.y_pos)
@@ -38,20 +38,11 @@ class Game:
             self.clock.tick(60)
             
             
-    def blit_objects(self):
-        self.screen.blit(
-            self.player.frame,
-            (self.player.x_pos, self.player.y_pos)
-        )
-        
-        self.player.update(objects_in_memory)
+    def objects_update(self):
+        self.player.update(self.screen, objects_in_memory)
         
         for obj in objects_in_memory:
-            self.screen.blit(
-                obj.frame, 
-                (obj.x_pos, obj.y_pos)
-            ) # "Por outra 'surface' por cima"
-            obj.update(objects_in_memory)
+            obj.update(self.screen, objects_in_memory)
 
         
     def generate_enemies(self):

@@ -12,14 +12,23 @@ class Entity:
         self.frame.set_colorkey((0, 0, 0))
         self.x_pos = x_pos
         self.y_pos = self.y
-        self.rect = pg.rect.Rect(self.x_pos, self.y, 80, 50)
+        
         
         self.speed = 10
         self.attack_delay = None
         
-    def update(self, objects_in_memory):
+    def update(self, screen, objects_in_memory):
+        self.blit(screen)
         self.move()
         self.attack(objects_in_memory)
+        self.get_rect()
+        
+    def get_rect(self):
+        return pg.rect.Rect(
+            self.x_pos, self.y, 
+            self.frame.get_width(), 
+            self.frame.get_height()
+        )
         
     def attack(self, objects_in_memory: list):
         if self.attack_delay:
@@ -30,6 +39,12 @@ class Entity:
         if key_pressed[pg.K_SPACE]:
             objects_in_memory.append(Rock(self.x_pos, self.y_pos))
             self.attack_delay = Delay(milliseconds=150)
+            
+    def blit(self, screen):
+        screen.blit(
+            self.frame,
+            (self.x_pos, self.y_pos)
+        )
     
     def move(self):
         key_pressed = pg.key.get_pressed()

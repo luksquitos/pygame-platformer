@@ -10,8 +10,15 @@ class Rock:
         self.y_pos = y
         
     
-    def update(self, objects_in_memory):
+    def update(self, screen, objects_in_memory):
+        self.blit(screen)
         self.move()
         
     def move(self):
         self.y_pos -= 10
+        
+    def blit(self, screen):
+        screen.blit(
+            self.frame,
+            (self.x_pos, self.y_pos)
+        )
