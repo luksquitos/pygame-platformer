@@ -28,7 +28,8 @@ class Game:
             self.objects_update()
 
             for event in pg.event.get():
-                if event.type == pg.QUIT:
+                esc = pg.key.get_pressed()[pg.K_ESCAPE]
+                if event.type == pg.QUIT or esc:
                     pg.quit()
                     sys.exit()
             
