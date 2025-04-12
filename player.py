@@ -2,77 +2,57 @@ import pygame as pg
 from random import randint
 from bullet import Rock
 from delay import Delay
+from objects import MovingObject
 
-class Entity:
-    frame = None
-    y = None
+
+class Player(MovingObject):
+    frame_path = "data/images/entities/player/idle/00.png"
+    velocity = 10
     
-    def __init__(self, x_pos):
-        self.frame = pg.image.load(self.frame)
-        self.frame.set_colorkey((0, 0, 0))
-        self.x_pos = x_pos
-        self.y_pos = self.y
-        
-        
-        self.speed = 10
-        self.attack_delay = None
-        
-    def update(self, screen, objects_in_memory):
-        self.blit(screen)
-        self.move()
-        self.attack(objects_in_memory)
-        self.get_rect()
-        
-    def get_rect(self):
-        return pg.rect.Rect(
-            self.x_pos, self.y, 
-            self.frame.get_width(), 
-            self.frame.get_height()
-        )
-        
+    def update(self, screen, objs_in_memory):
+        super().update(screen, objs_in_memory)
+        self.attack(objs_in_memory)
+    
     def attack(self, objects_in_memory: list):
+        if not hasattr(self, "attack_delay"):
+            self.attack_delay = None
+
         if self.attack_delay:
             return 
         
         key_pressed = pg.key.get_pressed()
-
+        
         if key_pressed[pg.K_SPACE]:
             objects_in_memory.append(Rock(self.x_pos, self.y_pos))
             self.attack_delay = Delay(milliseconds=150)
-            
-    def blit(self, screen):
-        screen.blit(
-            self.frame,
-            (self.x_pos, self.y_pos)
-        )
-    
+
     def move(self):
         key_pressed = pg.key.get_pressed()
         
         if key_pressed[pg.K_w]:
-            self.y_pos -= self.speed
+            self.y_pos -= self.velocity
         
         if key_pressed[pg.K_s]:
-            self.y_pos += self.speed
+            self.y_pos += self.velocity
         
         if key_pressed[pg.K_a]:
-            self.x_pos -= self.speed
+            self.x_pos -= self.velocity
         
         if key_pressed[pg.K_d]:
-            self.x_pos += self.speed
-
-class Player(Entity):
-    frame = "data/images/entities/player/idle/00.png"
-    y = 200
+            self.x_pos += self.velocity
     
-class Enemy(Entity):
-    frame = "data/images/entities/enemy/idle/00.png"
-    x = randint(100, 600)
-    y = 0
+class Enemy(MovingObject):
+    frame_path = "data/images/entities/enemy/idle/00.png"
+    velocity = 5
     
+    @classmethod
+    def generate(cls):
+        from random import randint
+        
+        return cls(x_pos=randint(100, 400), y_pos=0)
     
     def move(self):
-        self.y_pos += self.speed
+        self.y_pos += self.velocity
         
         if self.y_pos >= 480:
             self.delete = True

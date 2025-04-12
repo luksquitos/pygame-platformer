@@ -10,25 +10,18 @@ class Game:
         pg.display.set_caption("ninja game")
         self.screen = pg.display.set_mode((640, 480))
         self.clock = pg.time.Clock()
-        self.player = Player(x_pos=100)
+        self.player = Player(x_pos=100, y_pos=200, size=(50, 50))
             
     def run(self):
         while True:
             
             self.screen.fill((14, 219, 248)) # Usado para "limpar a tela"
-            print("Quantidade de objetos na memória ", len(objects_in_memory))
+            # print("Quantidade de objetos na memória ", len(objects_in_memory))
             
             # self.generate_enemies()
-            # print("quantidade de objetos", len(objects_in_memory))
             
             self.objects_update()
-            # self.screen.blit(
-            #     self.player.frame, 
-            #     (self.player.x_pos, self.player.y_pos)
-            # ) # "Por outra 'surface' por cima"
-            
-            # self.player.update()
-            
+
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     pg.quit()
@@ -51,6 +44,6 @@ class Game:
         if num != 2:
             return
         
-        objects_in_memory.append(Enemy(x_pos=randint(100, 600)))
+        objects_in_memory.append(Enemy.generate())
             
         
