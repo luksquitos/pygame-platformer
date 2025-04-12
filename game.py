@@ -16,7 +16,7 @@ class Game:
             
     def run(self):
         objects_in_memory.append(Player(x_pos=100, y_pos=200, size=(50, 50)))
-        # objects_in_memory.append(Cloud(100, 80))
+        objects_in_memory.append(Cloud(100, 80))
         
         while True:
             

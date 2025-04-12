@@ -1,5 +1,6 @@
+from __future__ import annotations
 import pygame as pg
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 from abc import ABC
 
 class Object(ABC):
@@ -10,7 +11,8 @@ class Object(ABC):
         self, 
         x_pos: int,
         y_pos: int,
-        size: Tuple[int, int] | None = None
+        size: Optional[Tuple[int, int]] = None
+        # size: Tuple[int, int] | None = None
     ) -> None:
         assert self.frame_path, f"frame path not provided for {self.__class__.__name__}"
         assert self.slug, f"slug not provided for {self.__class__.__name__}"
@@ -24,7 +26,7 @@ class Object(ABC):
         self.x_pos = x_pos
         self.y_pos = y_pos
     
-    def update(self, screen: pg.Surface, objs_in_memory: list) -> None:
+    def update(self, screen: pg.Surface, objs_in_memory: List[Object]) -> None:
         self.blit(screen)
         self.check_collisions(objs_in_memory)
         
@@ -39,7 +41,7 @@ class Object(ABC):
     def blit(self, screen: pg.Surface) -> None:
         screen.blit(self.frame, (self.x_pos, self.y_pos))
         
-    def check_collisions(self, objs_in_memory: list) -> None:
+    def check_collisions(self, objs_in_memory: List[Object]) -> None:
         objs_copy = objs_in_memory.copy()
         objs_copy.remove(self) # objects can't collide with himself
         for obj in objs_copy:
@@ -49,14 +51,14 @@ class Object(ABC):
             self.perform_collision_action(obj)
     
     @property
-    def can_delete(self):
+    def can_delete(self) -> bool:
         if hasattr(self, "_can_delete"):
             return self._can_delete
         
         return self.y_pos > 480 or self.y_pos < 0
     
     @can_delete.setter
-    def can_delete(self, value):
+    def can_delete(self, value: bool) -> None:
         self._can_delete = value
     
     def perform_collision_action(self, obj) -> None:
