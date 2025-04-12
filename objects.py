@@ -4,6 +4,7 @@ from abc import ABC
 
 class Object(ABC):
     frame_path = None 
+    slug = None
     
     def __init__(
         self, 
@@ -12,6 +13,7 @@ class Object(ABC):
         size: Tuple[int, int] | None = None
     ) -> None:
         assert self.frame_path, f"frame path not provided for {self.__class__.__name__}"
+        assert self.slug, f"slug not provided for {self.__class__.__name__}"
         
         self.frame = self.frame_path
         self.frame = pg.image.load(self.frame)
@@ -24,7 +26,11 @@ class Object(ABC):
     
     def update(self, screen: pg.Surface, objs_in_memory: list) -> None:
         self.blit(screen)
-        self.get_collisions(objs_in_memory)
+        self.check_collisions(objs_in_memory)
+        
+        if self.check_collisions(objs_in_memory):
+            print(self.__class__, "Colidiu com ", self.check_collisions(objs_in_memory))
+        
         
     @property
     def rect(self) -> pg.Rect:
@@ -33,15 +39,32 @@ class Object(ABC):
     def blit(self, screen: pg.Surface) -> None:
         screen.blit(self.frame, (self.x_pos, self.y_pos))
         
-    def get_collisions(self, objs_in_memory: list) -> list:
-        collisions = []
-        for obj in objs_in_memory:
+    def check_collisions(self, objs_in_memory: list) -> None:
+        objs_copy = objs_in_memory.copy()
+        objs_copy.remove(self) # objects can't collide with himself
+        for obj in objs_copy:
             if not self.rect.colliderect(obj.rect):
                 continue
             
-            collisions.append(obj)
+            self.perform_collision_action(obj)
+    
+    @property
+    def can_delete(self):
+        if hasattr(self, "_can_delete"):
+            return self._can_delete
         
-        return collisions
+        return self.y_pos > 480 or self.y_pos < 0
+    
+    @can_delete.setter
+    def can_delete(self, value):
+        self._can_delete = value
+    
+    def perform_collision_action(self, obj) -> None:
+        print(
+            f"{self.__class__.__name__} doesn't have a action for {obj.__class__.__name__}"
+        )
+        
+        return None
 
 
 class MovingObject(Object):

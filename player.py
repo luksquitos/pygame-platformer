@@ -1,4 +1,5 @@
 import pygame as pg
+import slugs
 from random import randint
 from bullet import Rock
 from delay import Delay
@@ -7,6 +8,7 @@ from objects import MovingObject
 
 class Player(MovingObject):
     frame_path = "data/images/entities/player/idle/00.png"
+    slug = slugs.PLAYER
     velocity = 10
     
     def update(self, screen, objs_in_memory):
@@ -23,7 +25,7 @@ class Player(MovingObject):
         key_pressed = pg.key.get_pressed()
         
         if key_pressed[pg.K_SPACE]:
-            objects_in_memory.append(Rock(self.x_pos, self.y_pos))
+            objects_in_memory.append(Rock(self.x_pos, self.y_pos-20))
             self.attack_delay = Delay(milliseconds=150)
 
     def move(self):
@@ -43,13 +45,14 @@ class Player(MovingObject):
     
 class Enemy(MovingObject):
     frame_path = "data/images/entities/enemy/idle/00.png"
+    slug = slugs.ENEMY
     velocity = 5
     
     @classmethod
-    def generate(cls):
+    def generate(cls, size=None):
         from random import randint
         
-        return cls(x_pos=randint(100, 400), y_pos=0)
+        return cls(x_pos=randint(100, 400), y_pos=0, size=size)
     
     def move(self):
         self.y_pos += self.velocity

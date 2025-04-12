@@ -1,8 +1,11 @@
 import pygame as pg
 import sys
+from typing import List
+from objects import Object
 from player import Player, Enemy
+from tile import Cloud
 
-objects_in_memory = []
+objects_in_memory: List[Object] = []
 class Game:
     def __init__(self):
         pg.init()
@@ -10,15 +13,17 @@ class Game:
         pg.display.set_caption("ninja game")
         self.screen = pg.display.set_mode((640, 480))
         self.clock = pg.time.Clock()
-        self.player = Player(x_pos=100, y_pos=200, size=(50, 50))
             
     def run(self):
+        objects_in_memory.append(Player(x_pos=100, y_pos=200, size=(50, 50)))
+        # objects_in_memory.append(Cloud(100, 80))
+        
         while True:
             
             self.screen.fill((14, 219, 248)) # Usado para "limpar a tela"
-            # print("Quantidade de objetos na memória ", len(objects_in_memory))
+            print("Quantidade de objetos na memória ", len(objects_in_memory))
             
-            # self.generate_enemies()
+            self.generate_enemies()
             
             self.objects_update()
 
@@ -32,18 +37,20 @@ class Game:
             
             
     def objects_update(self):
-        self.player.update(self.screen, objects_in_memory)
-        
         for obj in objects_in_memory:
             obj.update(self.screen, objects_in_memory)
+            
+            if not obj.can_delete:
+                continue
+            objects_in_memory.remove(obj)
 
         
     def generate_enemies(self):
         from random import randint
-        num = randint(1, 30)
+        num = randint(1, 50)
         if num != 2:
             return
         
-        objects_in_memory.append(Enemy.generate())
+        objects_in_memory.append(Enemy.generate(size=(50, 50)))
             
         
