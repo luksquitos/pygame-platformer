@@ -17,9 +17,8 @@ class Object(ABC):
         assert self.frame_path, f"frame path not provided for {self.__class__.__name__}"
         assert self.slug, f"slug not provided for {self.__class__.__name__}"
         
-        self.frame = self.frame_path
-        self.frame = pg.image.load(self.frame)
-        self.frame.set_colorkey((0, 0, 0))
+        self.frame = pg.image.load(self.frame_path)
+        self.frame.set_colorkey((0, 0, 0)) # make background transparent
         if size:
             self.frame = pg.transform.scale(self.frame, size)
             
@@ -55,16 +54,17 @@ class Object(ABC):
         if hasattr(self, "_can_delete"):
             return self._can_delete
         
-        return self.y_pos > 480 or self.y_pos < 0
+        # out of y screen bounds.
+        return self.y_pos > 240 or self.y_pos < 0
     
     @can_delete.setter
     def can_delete(self, value: bool) -> None:
         self._can_delete = value
     
     def perform_collision_action(self, obj) -> None:
-        print(
-            f"{self.__class__.__name__} doesn't have a action for {obj.__class__.__name__}"
-        )
+        # print(
+        #     f"{self.__class__.__name__} doesn't have a action for {obj.__class__.__name__}"
+        # )
         
         return None
 

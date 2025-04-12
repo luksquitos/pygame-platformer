@@ -15,6 +15,10 @@ class Player(MovingObject):
         super().update(screen, objs_in_memory)
         self.attack(objs_in_memory)
     
+    @property
+    def can_delete(self):
+        return False
+    
     def attack(self, objects_in_memory: list):
         if not hasattr(self, "attack_delay"):
             self.attack_delay = None
@@ -52,7 +56,7 @@ class Enemy(MovingObject):
     def generate(cls, size=None):
         from random import randint
         
-        return cls(x_pos=randint(100, 400), y_pos=0, size=size)
+        return cls(x_pos=randint(1, 200), y_pos=0, size=size)
     
     def move(self):
         self.y_pos += self.velocity
