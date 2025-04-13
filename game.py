@@ -4,7 +4,7 @@ from core import settings
 from typing import List
 from objects import Object
 from player import Player, Enemy
-from tile import Cloud
+from tile import Cloud, TileMap
 
 
 class Game:
@@ -19,13 +19,14 @@ class Game:
         )
         self.objs_in_memory: List[Object] = []
         self.clock = pg.time.Clock()
+        self.tilemap = TileMap()
+        self.objs_in_memory += self.tilemap.tilemap_objects
+        # self.objs_in_memory = self.tilemap.tilemap_objects
             
     def run(self):
         self.objs_in_memory.append(Cloud(100, 80))
+        # self.objs_in_memory.append(TileMap())
         self.objs_in_memory.append(Player(x_pos=100, y_pos=200, size=(25, 25)))
-        from core.images import load_images
-        
-        print(load_images("entities/player/idle/"))
         
         while True:
             
@@ -33,6 +34,7 @@ class Game:
             # print("Quantidade de objetos na memória ", len(self.objs_in_memory))
             
             # self.generate_enemies()
+            # self.tilemap.update(self.display, self.objects_update)
             
             self.objects_update()
 

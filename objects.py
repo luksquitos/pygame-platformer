@@ -14,13 +14,22 @@ class Object(ABC):
         self, 
         x_pos: int,
         y_pos: int,
+        surface: Optional[pg.Surface] = None,
         size: Optional[Tuple[int, int]] = None
         # size: Tuple[int, int] | None = None
     ) -> None:
-        assert self.frame_path, f"frame path not provided for {self.__class__.__name__}"
-        assert self.slug, f"slug not provided for {self.__class__.__name__}"
         
-        self.frame = load_image(self.frame_path, size)
+        print(self.__class__)
+        
+        if not self.frame_path and not surface:
+            raise ValueError("Must provide 'frame_path' or existing'surface'")
+        
+        # assert self.slug, f"slug not provided for {self.__class__.__name__}"
+        
+        self.frame = surface or load_image(self.frame_path, size)
+        print(self.frame)
+        
+        #print(self.frame, " para ", self.__class__.__name__)
             
         self.x_pos = x_pos
         self.y_pos = y_pos
@@ -72,8 +81,8 @@ class Object(ABC):
 class MovingObject(Object):
     velocity = None
     
-    def __init__(self, x_pos, y_pos, size = None):
-        super().__init__(x_pos, y_pos, size)
+    def __init__(self, x_pos, y_pos, surface=None, size = None):
+        super().__init__(x_pos, y_pos, surface, size)
         assert self.velocity, f"Must provide velocity to {self.__class__.__name__}"
     
     def update(self, screen, objs_in_memory):
