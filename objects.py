@@ -26,7 +26,7 @@ class Object(ABC):
         self.y_pos = y_pos
     
     def update(self, screen: pg.Surface, objs_in_memory: List[Object]) -> None:
-        self.blit(screen)
+        self.render(screen)
         self.check_collisions(objs_in_memory)
         
         if self.check_collisions(objs_in_memory):
@@ -37,7 +37,7 @@ class Object(ABC):
     def rect(self) -> pg.Rect:
         raise NotImplemented(f"rect property must be override for {self.__class__.__name__}")
     
-    def blit(self, screen: pg.Surface) -> None:
+    def render(self, screen: pg.Surface) -> None:
         screen.blit(self.frame, (self.x_pos, self.y_pos))
         
     def check_collisions(self, objs_in_memory: List[Object]) -> None:

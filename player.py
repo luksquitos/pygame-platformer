@@ -28,7 +28,7 @@ class Player(MovingObject):
         key_pressed = pg.key.get_pressed()
         
         if key_pressed[pg.K_SPACE]:
-            objects_in_memory.append(Rock(self.x_pos, self.y_pos-20))
+            objects_in_memory.append(Rock(self.rect.center[0], self.rect.center[1]))
             self.attack_delay = Delay(milliseconds=150)
 
     def move(self):
