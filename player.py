@@ -35,16 +35,16 @@ class Player(MovingObject):
     def move(self):
         key_pressed = pg.key.get_pressed()
         
-        if key_pressed[pg.K_w]:
+        if key_pressed[pg.K_w] and self.rect.top > 0:
             self.y_pos -= self.velocity
         
-        if key_pressed[pg.K_s]:
+        if key_pressed[pg.K_s] and self.rect.bottom <= 240:
             self.y_pos += self.velocity
         
-        if key_pressed[pg.K_a]:
+        if key_pressed[pg.K_a] and self.rect.left > 0:
             self.x_pos -= self.velocity
         
-        if key_pressed[pg.K_d]:
+        if key_pressed[pg.K_d] and self.rect.right <= 320:
             self.x_pos += self.velocity
     
 class Enemy(MovingObject):
