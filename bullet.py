@@ -5,7 +5,7 @@ from objects import MovingObject
 class Rock(MovingObject):
     frame_path = "data/images/tiles/stone/0.png"
     slug = slugs.BULLET
-    velocity = 10
+    velocity = 7
     
     def move(self):
         self.y_pos -= self.velocity

@@ -9,7 +9,7 @@ from objects import MovingObject
 class Player(MovingObject):
     frame_path = "data/images/entities/player/idle/00.png"
     slug = slugs.PLAYER
-    velocity = 10
+    velocity = 8
     
     def update(self, screen, objs_in_memory):
         super().update(screen, objs_in_memory)
@@ -50,7 +50,7 @@ class Player(MovingObject):
 class Enemy(MovingObject):
     frame_path = "data/images/entities/enemy/idle/00.png"
     slug = slugs.ENEMY
-    velocity = 5
+    velocity = 2
     
     @classmethod
     def generate(cls, size=None):
