@@ -6,7 +6,7 @@ from objects import Object
 from player import Player, Enemy
 from tile import Cloud
 
-objects_in_memory: List[Object] = []
+
 class Game:
     def __init__(self):
         pg.init()
@@ -17,16 +17,17 @@ class Game:
         self.display = pg.Surface(
             (settings.DISPLAY_WIDTH, settings.DISPLAY_HEIGHT)
         )
+        self.objs_in_memory: List[Object] = []
         self.clock = pg.time.Clock()
             
     def run(self):
-        objects_in_memory.append(Cloud(100, 80))
-        objects_in_memory.append(Player(x_pos=100, y_pos=200, size=(25, 25)))
+        self.objs_in_memory.append(Cloud(100, 80))
+        self.objs_in_memory.append(Player(x_pos=100, y_pos=200, size=(25, 25)))
         
         while True:
             
             self.display.fill((14, 219, 248)) # Usado para "limpar a tela"
-            # print("Quantidade de objetos na memória ", len(objects_in_memory))
+            # print("Quantidade de objetos na memória ", len(self.objs_in_memory))
             
             # self.generate_enemies()
             
@@ -46,12 +47,12 @@ class Game:
             
             
     def objects_update(self):
-        for obj in objects_in_memory:
-            obj.update(self.display, objects_in_memory)
+        for obj in self.objs_in_memory:
+            obj.update(self.display, self.objs_in_memory)
             
             if not obj.can_delete:
                 continue
-            objects_in_memory.remove(obj)
+            self.objs_in_memory.remove(obj)
 
         
     def generate_enemies(self):
@@ -60,6 +61,6 @@ class Game:
         if num != 2:
             return
         
-        objects_in_memory.append(Enemy.generate(size=(25, 25)))
+        self.objs_in_memory.append(Enemy.generate(size=(25, 25)))
             
         
