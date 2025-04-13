@@ -23,6 +23,9 @@ class Game:
     def run(self):
         self.objs_in_memory.append(Cloud(100, 80))
         self.objs_in_memory.append(Player(x_pos=100, y_pos=200, size=(25, 25)))
+        from core.images import load_images
+        
+        print(load_images("entities/player/idle/"))
         
         while True:
             

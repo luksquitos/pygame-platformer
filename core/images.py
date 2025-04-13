@@ -1,4 +1,5 @@
-from typing import Optional, Tuple
+from os import listdir
+from typing import Optional, Tuple, List
 
 import pygame as pg
 
@@ -13,3 +14,12 @@ def load_image(path: str, size: Optional[Tuple[int, int]] = None) -> pg.Surface:
         image = pg.transform.scale(image, size)
         
     return image
+
+
+def load_images(path: str) -> List[pg.Surface]:
+    images = []
+
+    for img_name in sorted(listdir(BASE_IMAGE_PATH + path)):
+        images.append(load_image(path + img_name))
+        
+    return images
