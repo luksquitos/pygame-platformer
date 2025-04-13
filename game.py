@@ -17,13 +17,13 @@ class Game:
         self.clock = pg.time.Clock()
             
     def run(self):
-        objects_in_memory.append(Player(x_pos=100, y_pos=200, size=(25, 25)))
         objects_in_memory.append(Cloud(100, 80))
+        objects_in_memory.append(Player(x_pos=100, y_pos=200, size=(25, 25)))
         
         while True:
             
             self.display.fill((14, 219, 248)) # Usado para "limpar a tela"
-            print("Quantidade de objetos na memória ", len(objects_in_memory))
+            # print("Quantidade de objetos na memória ", len(objects_in_memory))
             
             self.generate_enemies()
             
