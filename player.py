@@ -1,13 +1,12 @@
 import pygame as pg
 import slugs
-from random import randint
 from bullet import Rock
 from delay import Delay
 from objects import MovingObject
-
+from core.settings import DISPLAY_WIDTH, DISPLAY_HEIGHT
 
 class Player(MovingObject):
-    frame_path = "data/images/entities/player/idle/00.png"
+    frame_path = "entities/player/idle/00.png"
     slug = slugs.PLAYER
     velocity = 8
     
@@ -38,17 +37,17 @@ class Player(MovingObject):
         if key_pressed[pg.K_w] and self.rect.top > 0:
             self.y_pos -= self.velocity
         
-        if key_pressed[pg.K_s] and self.rect.bottom <= 240:
+        if key_pressed[pg.K_s] and self.rect.bottom <= DISPLAY_HEIGHT:
             self.y_pos += self.velocity
         
         if key_pressed[pg.K_a] and self.rect.left > 0:
             self.x_pos -= self.velocity
         
-        if key_pressed[pg.K_d] and self.rect.right <= 320:
+        if key_pressed[pg.K_d] and self.rect.right <= DISPLAY_WIDTH:
             self.x_pos += self.velocity
     
 class Enemy(MovingObject):
-    frame_path = "data/images/entities/enemy/idle/00.png"
+    frame_path = "entities/enemy/idle/00.png"
     slug = slugs.ENEMY
     velocity = 2
     

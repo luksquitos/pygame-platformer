@@ -1,7 +1,10 @@
 from __future__ import annotations
-import pygame as pg
 from typing import Tuple, List, Optional
 from abc import ABC
+
+import pygame as pg
+
+from core.images import load_image
 
 class Object(ABC):
     frame_path = None 
@@ -17,10 +20,7 @@ class Object(ABC):
         assert self.frame_path, f"frame path not provided for {self.__class__.__name__}"
         assert self.slug, f"slug not provided for {self.__class__.__name__}"
         
-        self.frame = pg.image.load(self.frame_path)
-        self.frame.set_colorkey((0, 0, 0)) # make background transparent
-        if size:
-            self.frame = pg.transform.scale(self.frame, size)
+        self.frame = load_image(self.frame_path, size)
             
         self.x_pos = x_pos
         self.y_pos = y_pos

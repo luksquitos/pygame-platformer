@@ -1,5 +1,6 @@
 import pygame as pg
 import sys
+from core import settings
 from typing import List
 from objects import Object
 from player import Player, Enemy
@@ -9,11 +10,13 @@ objects_in_memory: List[Object] = []
 class Game:
     def __init__(self):
         pg.init()
-
         pg.display.set_caption("ninja game")
-        self.screen = pg.display.set_mode((640, 480))
+
+        self.screen = pg.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
         # It gives pixel art effect
-        self.display = pg.Surface((320, 240))
+        self.display = pg.Surface(
+            (settings.DISPLAY_WIDTH, settings.DISPLAY_HEIGHT)
+        )
         self.clock = pg.time.Clock()
             
     def run(self):
