@@ -14,8 +14,10 @@ class LogCollisionMixin:
         self.rect_color = (randint(1, 100), randint(1, 200), randint(1, 200))
     
     def update(self, screen, objs):
-        self.screen = screen
         super().update(screen, objs)
+        self.screen = screen
+        if self.collisions:
+            self.draw()
         
     def log(self):
         key_pressed = pg.key.get_pressed()
@@ -40,9 +42,5 @@ class LogCollisionMixin:
     def draw(self):
         pg.draw.rect(self.screen, self.rect_color, self.rect)
             
-    def perform_collision_action(self, obj):
-        super().perform_collision_action(obj)
-        self.draw()
-        self.log()
         
         

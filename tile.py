@@ -82,7 +82,6 @@ def poison_player(instance, objs_in_memory, collisions):
         return 
     
     for obj in collisions:
-        print("oi", collisions)
         if obj.slug == "player":
             print("Player envenenado")
             obj.can_delete = True

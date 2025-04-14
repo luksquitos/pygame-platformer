@@ -22,6 +22,5 @@ class Rock(MovingObject):
     velocity = 2
     
     def move(self):
-        self.y_pos -= self.velocity
         self.rect.y -= self.velocity
 

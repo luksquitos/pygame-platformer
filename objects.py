@@ -27,14 +27,17 @@ class Object(ABC):
         
         self.frame = surface or load_image(self.frame_path, size)
             
-        self.x_pos = x_pos
-        self.y_pos = y_pos
-        self.rect = pg.rect.Rect(
-            self.x_pos, 
-            self.y_pos,
-            self.frame.get_width(),
-            self.frame.get_height()
-        )
+        # self.x_pos = x_pos
+        # self.y_pos = y_pos
+        self.rect = self.frame.get_rect()
+        self.rect.x = x_pos
+        self.rect.y = y_pos
+        # self.rect = pg.rect.Rect(
+        #     self.x_pos, 
+        #     self.y_pos,
+        #     self.frame.get_width(),
+        #     self.frame.get_height()
+        # )
     
     def update(self, screen: pg.Surface, objs_in_memory: List[Object]) -> None:
         self.render(screen)
@@ -44,7 +47,7 @@ class Object(ABC):
         self.perform_actions(objs_in_memory)
     
     def render(self, screen: pg.Surface) -> None:
-        screen.blit(self.frame, (self.x_pos, self.y_pos))
+        screen.blit(self.frame, (self.rect.x, self.rect.y))
         
     def check_collisions(self, objs_in_memory: List[Object]) -> List[Object]:
         objs_copy = objs_in_memory.copy()
@@ -74,7 +77,7 @@ class Object(ABC):
             return self._can_delete
         
         # out of y screen bounds.
-        return self.y_pos > 240 or self.y_pos < 0
+        return self.rect.y > 240 or self.rect.x < 0
     
     @can_delete.setter
     def can_delete(self, value: bool) -> None:
