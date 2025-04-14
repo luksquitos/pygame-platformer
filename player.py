@@ -5,6 +5,7 @@ from delay import Delay
 from objects import MovingObject
 from core.settings import DISPLAY_WIDTH, DISPLAY_HEIGHT
 from core.mixins import LogCollisionMixin
+from time import sleep
 
 
 def shoot_bullet(instance, objs_in_memory, collisions):
@@ -49,11 +50,17 @@ class Player(LogCollisionMixin, MovingObject):
         self.rect.y += velocity_y        
         for collision in self.collisions:
             if velocity_y > 0:
+                print("antes")
+                self.log()
                 self.rect.bottom = collision.rect.top
+                print("depois")
+                self.log()
                 velocity_y = 0
             else:
                 self.rect.top = collision.rect.bottom
                 velocity_y = 0
+            sleep(0.1)
+                
                 
         # Mexe X
         self.rect.x += velocity_x
@@ -64,6 +71,7 @@ class Player(LogCollisionMixin, MovingObject):
             else:
                 self.rect.left = collision.rect.right
                 velocity_x = 0
+            sleep(0.1)
 
 def kill_player(instance, objs_in_memory, collisions):
     if not collisions:

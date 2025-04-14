@@ -17,17 +17,19 @@ class LogCollisionMixin:
         super().update(screen, objs)
         self.screen = screen
         if self.collisions:
-            self.draw()
+            ...
+        self.draw()
+            # self.log()
         
     def log(self):
-        key_pressed = pg.key.get_pressed()
-        if not key_pressed[self.log_key]:
-            return 
+        # key_pressed = pg.key.get_pressed()
+        # if not key_pressed[self.log_key]:
+        #     return 
         
         message = (
             f"{self.__class__.__name__} "
-            f"x: {self.x_pos} "
-            f"y: {self.y_pos} "
+            f"rect-x: {self.rect.x} "
+            f"rect-y: {self.rect.y} "
             f"{self.rect} "
             f"top: {self.rect.top} "
             f"bottom: {self.rect.bottom} "
@@ -37,7 +39,7 @@ class LogCollisionMixin:
             
         
         print(colors.RED + message + colors.RESET)
-        # sleep(0.1)
+        sleep(0.1)
         
     def draw(self):
         pg.draw.rect(self.screen, self.rect_color, self.rect)
