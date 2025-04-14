@@ -2,8 +2,12 @@ import pygame as pg
 import slugs
 from objects import StaticObject
 from core.images import load_images
+from core.mixins import LogCollisionMixin
 from objects import StaticObject, Object
 from typing import List
+
+from random import randint
+from time import sleep
 
 # Maneira convencional
 # [
@@ -13,24 +17,8 @@ from typing import List
 #     [1, 1, 1, 1, 1],
 # ]
 
-class TileObject(StaticObject):
-    
-    def perform_collision_action(self, obj: Object):
-        if obj.slug == "player":
-            if obj.rect.bottom == self.rect.top:
-                print("1")
-                obj.y_pos = self.rect.top
-            if obj.rect.right == self.rect.left:
-                print("2")
-                obj.x_pos = self.rect.left
-            if obj.rect.left == self.rect.right:
-                print("3")
-                obj.x_pos = self.rect.right
-            if obj.rect.top == self.rect.bottom:
-                print("4")
-                obj.x_pos = self.rect.bottom
-                
-        return super().perform_collision_action(obj)
+class TileObject(LogCollisionMixin, StaticObject):
+    pass
 
 class TileMap:
     def __init__(self, tile_size=16):
@@ -76,7 +64,7 @@ class TileMap:
         for i in range(10):
             self.tilemap[f"{3 + i};10"] = {
                 "type": "grass",
-                "variant": 3,
+                "variant": 1,
                 "pos": (3 + i, 10)
             }
         for i in range(10):
@@ -89,13 +77,19 @@ class TileMap:
         return None
 
 
+def poison_player(instance, objs_in_memory, collisions):
+    if not collisions:
+        return 
+    
+    for obj in collisions:
+        print("oi", collisions)
+        if obj.slug == "player":
+            print("Player envenenado")
+            obj.can_delete = True
+
+
 class Cloud(StaticObject):
     frame_path = "clouds/cloud_1.png"
+    actions = [poison_player]
     slug = slugs.CLOUD
-    
-    def perform_collision_action(self, obj):
-        if obj.slug == "player":
-            print("Nuvem encostou no jogador")
-        
-        return super().perform_collision_action(obj)
     

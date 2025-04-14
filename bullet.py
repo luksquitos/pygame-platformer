@@ -4,15 +4,24 @@ import slugs
 from objects import MovingObject
 
 
+def kill_enemy(instance, objs_in_memory, collisions):
+    if not collisions:
+        return
+    
+    for obj in collisions:
+        if obj.slug != slugs.ENEMY:
+            continue
+        
+        obj.can_delete = True
+        instance.can_delete = True
+
 class Rock(MovingObject):
     frame_path = "projectile.png"
+    actions = [kill_enemy]
     slug = slugs.BULLET
-    velocity = 7
+    velocity = 2
     
     def move(self):
         self.y_pos -= self.velocity
-        
-    def perform_collision_action(self, obj):
-        if obj.slug == slugs.ENEMY:
-            obj.can_delete = True
-            self.can_delete = True
+        self.rect.y -= self.velocity
+

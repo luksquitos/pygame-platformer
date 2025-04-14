@@ -25,7 +25,6 @@ class Game:
             
     def run(self):
         self.objs_in_memory.append(Cloud(100, 80))
-        # self.objs_in_memory.append(TileMap())
         self.objs_in_memory.append(Player(x_pos=100, y_pos=200, size=(25, 25)))
         
         while True:
@@ -33,7 +32,7 @@ class Game:
             self.display.fill((14, 219, 248)) # Usado para "limpar a tela"
             # print("Quantidade de objetos na memória ", len(self.objs_in_memory))
             
-            # self.generate_enemies()
+            self.generate_enemies()
             # self.tilemap.update(self.display, self.objects_update)
             
             self.objects_update()

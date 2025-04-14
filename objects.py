@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Tuple, List, Optional
+from typing import Tuple, List, Optional, Literal
 from abc import ABC
 from random import randint as r
 import pygame as pg
@@ -7,7 +7,8 @@ import pygame as pg
 from core.images import load_image
 
 class Object(ABC):
-    frame_path = None 
+    frame_path: Literal["str"] = None
+    actions: Optional[List] = None
     slug = None
     
     def __init__(
@@ -25,27 +26,22 @@ class Object(ABC):
         # assert self.slug, f"slug not provided for {self.__class__.__name__}"
         
         self.frame = surface or load_image(self.frame_path, size)
-        
-        #print(self.frame, " para ", self.__class__.__name__)
             
         self.x_pos = x_pos
         self.y_pos = y_pos
+        self.rect = pg.rect.Rect(
+            self.x_pos, 
+            self.y_pos,
+            self.frame.get_width(),
+            self.frame.get_height()
+        )
     
     def update(self, screen: pg.Surface, objs_in_memory: List[Object]) -> None:
         self.render(screen)
         self.collisions = self.check_collisions(objs_in_memory)
-        self.perform_collision_action()
-        # print(
-        #     f"{self.__class__}\n",
-        #     f"top: {self.rect.top}\n",
-        #     f"bottom: {self.rect.bottom}",
-        # )
-        # print("=========" * 10)
-        
-        
-    @property
-    def rect(self) -> pg.Rect:
-        raise NotImplemented(f"rect property must be override for {self.__class__.__name__}")
+        # if self.collisions:
+        #     print(self, self.collisions)
+        self.perform_actions(objs_in_memory)
     
     def render(self, screen: pg.Surface) -> None:
         screen.blit(self.frame, (self.x_pos, self.y_pos))
@@ -63,10 +59,12 @@ class Object(ABC):
         
         return collisions
     
-    def perform_collision_action(self) -> None:
-        # print(
-        #     f"{self.__class__.__name__} doesn't have a action for {obj.__class__.__name__}"
-        # )
+    def perform_actions(self, objs_in_memory: List[Object]) -> None:
+        if not self.actions:
+            return 
+                
+        for action in self.actions:
+            action(self, objs_in_memory, self.collisions)
         
         return None
     
@@ -96,23 +94,6 @@ class MovingObject(Object):
     
     def move(self) -> None:
         raise NotImplemented(f"move method must be implemented for {self.__class__.__name__}")
-    
-    @property
-    def rect(self) -> pg.Rect:
-        # Moving objects will always have new positions.
-        return pg.rect.Rect(
-            self.x_pos, self.y_pos, self.frame.get_width(), self.frame.get_height()
-        )
-
 
 class StaticObject(Object):
-
-    @property
-    def rect(self) -> pg.Rect:
-        if not hasattr(self, "_rect"):
-            self._rect = pg.rect.Rect(
-                self.x_pos, self.y_pos, self.frame.get_width(), self.frame.get_height()
-            )
-        
-        return self._rect
-    
+    ...
