@@ -26,9 +26,7 @@ class Object(ABC):
         # assert self.slug, f"slug not provided for {self.__class__.__name__}"
         
         self.frame = surface or load_image(self.frame_path, size)
-            
-        # self.x_pos = x_pos
-        # self.y_pos = y_pos
+
         self.rect = self.frame.get_rect()
         self.rect.x = x_pos
         self.rect.y = y_pos

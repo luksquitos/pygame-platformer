@@ -47,31 +47,28 @@ class Player(LogCollisionMixin, MovingObject):
             velocity_x = self.velocity
 
         # Mexe Y
-        self.rect.y += velocity_y        
         for collision in self.collisions:
             if velocity_y > 0:
-                print("antes")
-                self.log()
                 self.rect.bottom = collision.rect.top
-                print("depois")
-                self.log()
                 velocity_y = 0
-            else:
+            elif velocity_y < 0:
                 self.rect.top = collision.rect.bottom
                 velocity_y = 0
-            sleep(0.1)
-                
+            # sleep(0.1)
                 
         # Mexe X
-        self.rect.x += velocity_x
         for collision in self.collisions:
             if velocity_x > 0:
                 self.rect.right = collision.rect.left
                 velocity_x = 0
-            else:
+            elif velocity_x < 0:
                 self.rect.left = collision.rect.right
                 velocity_x = 0
-            sleep(0.1)
+            # sleep(0.1)
+            
+        self.rect.y += velocity_y        
+        self.rect.x += velocity_x
+        
 
 def kill_player(instance, objs_in_memory, collisions):
     if not collisions:
