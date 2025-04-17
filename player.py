@@ -22,7 +22,7 @@ def shoot_bullet(instance, objs_in_memory, collisions):
         instance.attack_delay = Delay(milliseconds=150)
     
 
-class Player(LogCollisionMixin, MovingObject):
+class Player(MovingObject):
     frame_path = "entities/player/idle/00.png"
     slug = slugs.PLAYER
     velocity = 2
@@ -47,27 +47,26 @@ class Player(LogCollisionMixin, MovingObject):
             velocity_x = self.velocity
 
         # Mexe Y
-        for collision in self.collisions:
+        self.rect.y += velocity_y    
+        collisions = self.check_collisions(self.objs_in_memory)
+        for collision in collisions:
             if velocity_y > 0:
                 self.rect.bottom = collision.rect.top
                 velocity_y = 0
             elif velocity_y < 0:
                 self.rect.top = collision.rect.bottom
                 velocity_y = 0
-            # sleep(0.1)
                 
         # Mexe X
-        for collision in self.collisions:
+        self.rect.x += velocity_x
+        collisions = self.check_collisions(self.objs_in_memory)
+        for collision in collisions:
             if velocity_x > 0:
                 self.rect.right = collision.rect.left
-                velocity_x = 0
             elif velocity_x < 0:
                 self.rect.left = collision.rect.right
-                velocity_x = 0
             # sleep(0.1)
             
-        self.rect.y += velocity_y        
-        self.rect.x += velocity_x
         
 
 def kill_player(instance, objs_in_memory, collisions):
