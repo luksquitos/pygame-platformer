@@ -7,6 +7,18 @@ from player import Player, Enemy
 from tile import Cloud, TileMap
 
 
+# class ObjectsInMemory:
+#     def __init__(self, player, tilemap):
+#         self.player = player
+#         self.tilemap = tilemap
+    
+#     def update_player(self):
+#         self.player.update(self)
+        
+#     def update_tilemap(self):
+#         for tile in self.tilemap:
+#             tile.update(self)
+
 class Game:
     def __init__(self):
         pg.init()

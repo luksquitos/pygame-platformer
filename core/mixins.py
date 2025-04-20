@@ -16,9 +16,10 @@ class LogCollisionMixin:
     def update(self, screen, objs):
         super().update(screen, objs)
         self.screen = screen
-        if self.collisions:
+        collisions = self.check_collisions(objs)
+        if collisions:
             ...
-        self.draw()
+            self.draw()
             # self.log()
         
     def log(self):

@@ -30,18 +30,10 @@ class Object(ABC):
         self.rect = self.frame.get_rect()
         self.rect.x = x_pos
         self.rect.y = y_pos
-        # self.rect = pg.rect.Rect(
-        #     self.x_pos, 
-        #     self.y_pos,
-        #     self.frame.get_width(),
-        #     self.frame.get_height()
-        # )
-    
+            
     def update(self, screen: pg.Surface, objs_in_memory: List[Object]) -> None:
         self.render(screen)
-        self.collisions = self.check_collisions(objs_in_memory)
-        # if self.collisions:
-        #     print(self, self.collisions)
+        self.objs_in_memory = objs_in_memory
         self.perform_actions(objs_in_memory)
     
     def render(self, screen: pg.Surface) -> None:
@@ -65,7 +57,8 @@ class Object(ABC):
             return 
                 
         for action in self.actions:
-            action(self, objs_in_memory, self.collisions)
+            collisions = self.check_collisions(objs_in_memory)
+            action(self, objs_in_memory, collisions)
         
         return None
     

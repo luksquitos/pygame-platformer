@@ -18,7 +18,8 @@ from time import sleep
 # ]
 
 class TileObject(LogCollisionMixin, StaticObject):
-    pass
+    slug = slugs.TILE
+    
 
 class TileMap:
     def __init__(self, tile_size=16):
@@ -89,6 +90,6 @@ def poison_player(instance, objs_in_memory, collisions):
 
 class Cloud(StaticObject):
     frame_path = "clouds/cloud_1.png"
-    actions = [poison_player]
-    slug = slugs.CLOUD
+    # actions = [poison_player]
+    slug = slugs.OFFGRID
     

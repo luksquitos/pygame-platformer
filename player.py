@@ -46,10 +46,12 @@ class Player(MovingObject):
         if key_pressed[pg.K_d]:
             velocity_x = self.velocity
 
-        # Mexe Y
+        # Move Y
         self.rect.y += velocity_y    
         collisions = self.check_collisions(self.objs_in_memory)
         for collision in collisions:
+            if collision.slug != slugs.TILE:
+                continue
             if velocity_y > 0:
                 self.rect.bottom = collision.rect.top
                 velocity_y = 0
@@ -57,16 +59,16 @@ class Player(MovingObject):
                 self.rect.top = collision.rect.bottom
                 velocity_y = 0
                 
-        # Mexe X
+        # Move X
         self.rect.x += velocity_x
         collisions = self.check_collisions(self.objs_in_memory)
         for collision in collisions:
+            if collision.slug != slugs.TILE:
+                continue
             if velocity_x > 0:
                 self.rect.right = collision.rect.left
             elif velocity_x < 0:
                 self.rect.left = collision.rect.right
-            # sleep(0.1)
-            
         
 
 def kill_player(instance, objs_in_memory, collisions):
