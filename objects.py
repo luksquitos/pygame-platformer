@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Tuple, List, Optional, Literal
 from abc import ABC
 from random import randint as r
-import pygame as pg
+import pygame as pg 
 
 from core.images import load_image
 
@@ -13,8 +13,7 @@ class Object(ABC):
     
     def __init__(
         self, 
-        x_pos: int,
-        y_pos: int,
+        pos: Tuple[int, int],
         surface: Optional[pg.Surface] = None,
         size: Optional[Tuple[int, int]] = None
         # size: Tuple[int, int] | None = None
@@ -26,19 +25,26 @@ class Object(ABC):
         # assert self.slug, f"slug not provided for {self.__class__.__name__}"
         
         self.frame = surface or load_image(self.frame_path, size)
-
-        self.rect = self.frame.get_rect()
-        self.rect.x = x_pos
-        self.rect.y = y_pos
+        self.pos = list(pos) # frame position
+        self.size = size or (self.frame.get_width(), self.frame.get_height())
+    
+    @property
+    def rect(self):
+        return pg.rect.FRect(
+            self.pos[0],
+            self.pos[1],
+            self.size[0],
+            self.size[1]
+        )
             
     def update(self, screen: pg.Surface, objs_in_memory: List[Object], tilemap) -> None:
-        self.render(screen)
         self.tilemap = tilemap
         self.objs_in_memory = objs_in_memory
         self.perform_actions(objs_in_memory)
+        self.render(screen)
     
     def render(self, screen: pg.Surface) -> None:
-        screen.blit(self.frame, (self.rect.x, self.rect.y))
+        screen.blit(self.frame, self.pos)
         
     def check_collisions(self, objs: List[Object]) -> List[Object]:
         objs_copy = objs.copy()
@@ -70,7 +76,8 @@ class Object(ABC):
             return self._can_delete
         
         # out of y screen bounds.
-        return self.rect.y > 240 or self.rect.x < 0
+        # return self.rect.y > 240 or self.rect.x < 0
+        return False
     
     @can_delete.setter
     def can_delete(self, value: bool) -> None:
@@ -80,8 +87,8 @@ class Object(ABC):
 class MovingObject(Object):
     velocity = None
     
-    def __init__(self, x_pos, y_pos, surface=None, size = None):
-        super().__init__(x_pos, y_pos, surface, size)
+    def __init__(self, pos, surface=None, size = None):
+        super().__init__(pos, surface, size)
         assert self.velocity, f"Must provide velocity to {self.__class__.__name__}"
     
     def update(self, screen, objs_in_memory, tilemap):

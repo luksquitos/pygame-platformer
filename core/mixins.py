@@ -13,13 +13,13 @@ class LogCollisionMixin:
         super().__init__(*args, **kwargs)
         self.rect_color = (randint(1, 100), randint(1, 200), randint(1, 200))
     
-    def update(self, screen, objs):
-        super().update(screen, objs)
+    def update(self, screen, objs, tilemap):
+        super().update(screen, objs, tilemap)
         self.screen = screen
         collisions = self.check_collisions(objs)
+        self.draw()
         if collisions:
             ...
-            self.draw()
             # self.log()
         
     def log(self):

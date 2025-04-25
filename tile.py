@@ -17,9 +17,9 @@ from time import sleep
 #     [1, 1, 1, 1, 1],
 # ]
 
-NEIGHBOUR_OFFSETS = [(-1, 0), (-1, -1), (0, 1), (1, 1), (1, 0), (0, 0), (-1, 1), (0, 1), (1, 1)]
+NEIGHBOUR_OFFSETS = [(-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0), (0, 0), (-1, 1), (0, 1), (1, 1)]
 
-class TileObject(LogCollisionMixin, StaticObject):
+class TileObject(StaticObject):
     slug = slugs.TILE
     
 
@@ -80,7 +80,7 @@ class TileMap:
             )
             
             # self.tilemap_objects.append(TileObject(position[0], position[1], surface))
-            self.objects[loc] = TileObject(position[0], position[1], surface)
+            self.objects[loc] = TileObject(position, surface)
 
     
     def generate_map(self):

@@ -19,8 +19,8 @@ class Rock(MovingObject):
     frame_path = "projectile.png"
     actions = [kill_enemy]
     slug = slugs.BULLET
-    velocity = 2
+    velocity = 1
     
     def move(self):
-        self.rect.y -= self.velocity
+        self.pos[1] -= self.velocity
 

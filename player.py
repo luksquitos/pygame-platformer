@@ -25,46 +25,56 @@ def shoot_bullet(instance, objs_in_memory, collisions):
 class Player(MovingObject):
     frame_path = "entities/player/idle/00.png"
     slug = slugs.PLAYER
-    velocity = 2
+    velocity = [0, 0]
     direction = "idle"
     actions = [shoot_bullet]
+    collisions = {"up": False, "down": False, "left": False, "right": False}
 
     def move(self):
         key_pressed = pg.key.get_pressed()
-        velocity_y = 0
-        velocity_x = 0
+        aceleration_x = 1        
+        self.collisions = {"up": False, "down": False, "left": False, "right": False}
 
-        if key_pressed[pg.K_w]:
-            velocity_y = -self.velocity
+        if key_pressed[pg.K_w]: # JUMP
+            self.velocity[1] -= 0.5
         
-        if key_pressed[pg.K_s] :
-            velocity_y = self.velocity
+        # if key_pressed[pg.K_s] :
+        #     self.velocity[1] += 0.5
 
         if key_pressed[pg.K_a]:
-            velocity_x = -self.velocity
+            self.velocity[0] = -aceleration_x
         
         if key_pressed[pg.K_d]:
-            velocity_x = self.velocity
+            self.velocity[0] = aceleration_x
 
         # Move Y
-        self.rect.y += velocity_y    
-        collisions = self.check_collisions(self.tilemap.tiles_around((self.rect.x, self.rect.y)))
+        self.pos[1] += self.velocity[1]
+        collisions = self.check_collisions(self.tilemap.tiles_around(self.pos))
+        rect = self.rect
         for collision in collisions:
-            if velocity_y > 0:
-                self.rect.bottom = collision.rect.top
-                velocity_y = 0
-            elif velocity_y < 0:
-                self.rect.top = collision.rect.bottom
-                velocity_y = 0
+            # sleep(0.1)
+            if self.velocity[1] > 0:
+                rect.bottom = collision.rect.top
+            if self.velocity[1] < 0:
+                rect.top = collision.rect.bottom
+            
+            self.velocity[1] = 0
+            self.pos[1] = rect.y
                 
         # Move X
-        self.rect.x += velocity_x
+        self.pos[0] += self.velocity[0]
         collisions = self.check_collisions(self.tilemap.tiles_around((self.rect.x, self.rect.y)))
+        rect = self.rect
         for collision in collisions:
-            if velocity_x > 0:
-                self.rect.right = collision.rect.left
-            elif velocity_x < 0:
-                self.rect.left = collision.rect.right
+            if self.velocity[0] > 0:
+                rect.right = collision.rect.left
+            if self.velocity[0] < 0:
+                rect.left = collision.rect.right
+            
+            self.pos[0] = rect.x
+        
+        self.velocity[1] = min(5, self.velocity[1] + 0.1)
+        self.velocity[0] = 0
         
 
 def kill_player(instance, objs_in_memory, collisions):
@@ -90,7 +100,7 @@ class Enemy(MovingObject):
         return cls(x_pos=randint(1, 200), y_pos=0, size=size)
     
     def move(self):
-        self.rect.y += self.velocity
+        self.pos[1] += self.velocity
         
         
     

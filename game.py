@@ -11,13 +11,27 @@ from tile import Cloud, TileMap
 #     def __init__(self, player, tilemap):
 #         self.player = player
 #         self.tilemap = tilemap
-    
-#     def update_player(self):
-#         self.player.update(self)
         
-#     def update_tilemap(self):
-#         for tile in self.tilemap:
-#             tile.update(self)
+#     def update(self, display):
+#         self.tilemap.update(display, self)
+#         self.player.update(display, self)
+        
+#     @property
+#     def all(self):
+#         objects = [*self.tilemap.objects.values(), self.player]
+#         return objects
+    
+#     def delete_objects(self):
+#         # Remove objects from memory based on his atributes.
+#         for obj in self.all:
+#             pass
+        
+    # def update_player(self):
+    #     self.player.update(self)
+        
+    # def update_tilemap(self):
+    #     for tile in self.tilemap.tilemap_objects:
+    #         tile.update(self)
 
 class Game:
     def __init__(self):
@@ -32,12 +46,12 @@ class Game:
         self.objs_in_memory: List[Object] = []
         self.clock = pg.time.Clock()
         self.tilemap = TileMap()
-        self.objs_in_memory += self.tilemap.tilemap_objects
+        self.objs_in_memory += self.tilemap.objects.values()
         # self.objs_in_memory = self.tilemap.tilemap_objects
             
     def run(self):
-        self.objs_in_memory.append(Cloud(100, 80))
-        self.objs_in_memory.append(Player(x_pos=100, y_pos=200))
+        # self.objs_in_memory.append(Cloud(100, 80))
+        self.objs_in_memory.append(Player((80, 100), size=(16, 17)))
         
         while True:
             
@@ -64,7 +78,7 @@ class Game:
             
     def objects_update(self):
         for obj in self.objs_in_memory:
-            obj.update(self.display, self.objs_in_memory)
+            obj.update(self.display, self.objs_in_memory, self.tilemap)
             
             if not obj.can_delete:
                 continue
