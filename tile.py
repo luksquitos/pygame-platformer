@@ -17,6 +17,8 @@ from time import sleep
 #     [1, 1, 1, 1, 1],
 # ]
 
+NEIGHBOUR_OFFSETS = [(-1, 0), (-1, -1), (0, 1), (1, 1), (1, 0), (0, 0), (-1, 1), (0, 1), (1, 1)]
+
 class TileObject(LogCollisionMixin, StaticObject):
     slug = slugs.TILE
     
@@ -45,20 +47,40 @@ class TileMap:
             "grass": load_images("tiles/grass/"),
             "stone": load_images("tiles/stone/"),
         }
-        self.tilemap_objects: List[StaticObject] = []
+        self.objects = {} # based on location
         
         self.generate_map()
         self.create_tile_objects()
+        
+    # def update(self, screen, objs):
+    #     for tile_obj in self.objects:
+    #         tile_obj.update(screen, objs)
+        
+    def tiles_around(self, pos):
+        tile_loc = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
+        # tile_loc_str = f"{tile_loc[0]};{tile_loc[1]}"
+        tiles_around = []
+        for offset in NEIGHBOUR_OFFSETS:
+            location = f"{tile_loc[0] + offset[0]};{tile_loc[1] + offset[1]}"
+            if not location in self.objects: # Exists neighborhoods
+                continue
+            tiles_around.append(self.objects[location])
+            
+        print(tiles_around)
+        
+        return tiles_around
+            
 
     def create_tile_objects(self):
-        for tiles in self.tilemap.values():
+        for loc, tiles in self.tilemap.items():
             surface = self.assets[tiles["type"]][tiles["variant"]]
             position = (
                 tiles["pos"][0] * self.tile_size, # without the * was going be inside others.
                 tiles["pos"][1] * self.tile_size
             )
             
-            self.tilemap_objects.append(TileObject(position[0], position[1], surface))
+            # self.tilemap_objects.append(TileObject(position[0], position[1], surface))
+            self.objects[loc] = TileObject(position[0], position[1], surface)
 
     
     def generate_map(self):
@@ -74,8 +96,6 @@ class TileMap:
                 "variant": 1,
                 "pos": (14, 10 + i)
             }
-            
-        return None
 
 
 def poison_player(instance, objs_in_memory, collisions):

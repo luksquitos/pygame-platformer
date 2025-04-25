@@ -48,10 +48,8 @@ class Player(MovingObject):
 
         # Move Y
         self.rect.y += velocity_y    
-        collisions = self.check_collisions(self.objs_in_memory)
+        collisions = self.check_collisions(self.tilemap.tiles_around((self.rect.x, self.rect.y)))
         for collision in collisions:
-            if collision.slug != slugs.TILE:
-                continue
             if velocity_y > 0:
                 self.rect.bottom = collision.rect.top
                 velocity_y = 0
@@ -61,10 +59,8 @@ class Player(MovingObject):
                 
         # Move X
         self.rect.x += velocity_x
-        collisions = self.check_collisions(self.objs_in_memory)
+        collisions = self.check_collisions(self.tilemap.tiles_around((self.rect.x, self.rect.y)))
         for collision in collisions:
-            if collision.slug != slugs.TILE:
-                continue
             if velocity_x > 0:
                 self.rect.right = collision.rect.left
             elif velocity_x < 0:

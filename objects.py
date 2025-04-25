@@ -31,17 +31,19 @@ class Object(ABC):
         self.rect.x = x_pos
         self.rect.y = y_pos
             
-    def update(self, screen: pg.Surface, objs_in_memory: List[Object]) -> None:
+    def update(self, screen: pg.Surface, objs_in_memory: List[Object], tilemap) -> None:
         self.render(screen)
+        self.tilemap = tilemap
         self.objs_in_memory = objs_in_memory
         self.perform_actions(objs_in_memory)
     
     def render(self, screen: pg.Surface) -> None:
         screen.blit(self.frame, (self.rect.x, self.rect.y))
         
-    def check_collisions(self, objs_in_memory: List[Object]) -> List[Object]:
-        objs_copy = objs_in_memory.copy()
-        objs_copy.remove(self) # objects can't collide with himself
+    def check_collisions(self, objs: List[Object]) -> List[Object]:
+        objs_copy = objs.copy()
+        if self in objs:
+            objs_copy.remove(self) # objects can't collide with himself
         collisions = []
         
         for obj in objs_copy:
@@ -82,8 +84,8 @@ class MovingObject(Object):
         super().__init__(x_pos, y_pos, surface, size)
         assert self.velocity, f"Must provide velocity to {self.__class__.__name__}"
     
-    def update(self, screen, objs_in_memory):
-        super().update(screen, objs_in_memory)
+    def update(self, screen, objs_in_memory, tilemap):
+        super().update(screen, objs_in_memory, tilemap)
         self.move()
     
     def move(self) -> None:
