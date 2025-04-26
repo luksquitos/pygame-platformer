@@ -1,31 +1,65 @@
 import pygame as pg
 import sys
+from core import settings
 from typing import List
 from objects import Object
 from player import Player, Enemy
-from tile import Cloud
+from tile import Cloud, TileMap
 
-objects_in_memory: List[Object] = []
+
+# class ObjectsInMemory:
+#     def __init__(self, player, tilemap):
+#         self.player = player
+#         self.tilemap = tilemap
+        
+#     def update(self, display):
+#         self.tilemap.update(display, self)
+#         self.player.update(display, self)
+        
+#     @property
+#     def all(self):
+#         objects = [*self.tilemap.objects.values(), self.player]
+#         return objects
+    
+#     def delete_objects(self):
+#         # Remove objects from memory based on his atributes.
+#         for obj in self.all:
+#             pass
+        
+    # def update_player(self):
+    #     self.player.update(self)
+        
+    # def update_tilemap(self):
+    #     for tile in self.tilemap.tilemap_objects:
+    #         tile.update(self)
+
 class Game:
     def __init__(self):
         pg.init()
-
         pg.display.set_caption("ninja game")
-        self.screen = pg.display.set_mode((640, 480))
+
+        self.screen = pg.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
         # It gives pixel art effect
-        self.display = pg.Surface((320, 240))
+        self.display = pg.Surface(
+            (settings.DISPLAY_WIDTH, settings.DISPLAY_HEIGHT)
+        )
+        self.objs_in_memory: List[Object] = []
         self.clock = pg.time.Clock()
+        self.tilemap = TileMap()
+        self.objs_in_memory += self.tilemap.objects.values()
+        # self.objs_in_memory = self.tilemap.tilemap_objects
             
     def run(self):
-        objects_in_memory.append(Cloud(100, 80))
-        objects_in_memory.append(Player(x_pos=100, y_pos=200, size=(25, 25)))
+        # self.objs_in_memory.append(Cloud(100, 80))
+        self.objs_in_memory.append(Player((80, 100), size=(16, 17)))
         
         while True:
             
             self.display.fill((14, 219, 248)) # Usado para "limpar a tela"
-            # print("Quantidade de objetos na memória ", len(objects_in_memory))
+            # print("Quantidade de objetos na memória ", len(self.objs_in_memory))
             
-            # self.generate_enemies()
+            self.generate_enemies()
+            # self.tilemap.update(self.display, self.objects_update)
             
             self.objects_update()
 
@@ -43,12 +77,12 @@ class Game:
             
             
     def objects_update(self):
-        for obj in objects_in_memory:
-            obj.update(self.display, objects_in_memory)
+        for obj in self.objs_in_memory:
+            obj.update(self.display, self.objs_in_memory, self.tilemap)
             
             if not obj.can_delete:
                 continue
-            objects_in_memory.remove(obj)
+            self.objs_in_memory.remove(obj)
 
         
     def generate_enemies(self):
@@ -57,6 +91,6 @@ class Game:
         if num != 2:
             return
         
-        objects_in_memory.append(Enemy.generate(size=(25, 25)))
+        self.objs_in_memory.append(Enemy.generate(size=(25, 25)))
             
         

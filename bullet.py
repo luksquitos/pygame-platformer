@@ -1,16 +1,28 @@
 import pygame as pg
+
 import slugs
-from delay import Delay
 from objects import MovingObject
+
+
+def kill_enemy(instance, objs_in_memory, collisions):
+    if not collisions:
+        return
+    
+    for obj in collisions:
+        if obj.slug != slugs.ENEMY:
+            continue
+        
+        obj.can_delete = True
+        instance.can_delete = True
+
 class Rock(MovingObject):
-    frame_path = "data/images/tiles/stone/0.png"
+    frame_path = "projectile.png"
+    actions = [kill_enemy]
     slug = slugs.BULLET
-    velocity = 7
+    velocity = 1
     
     def move(self):
-        self.y_pos -= self.velocity
+        self.pos[1] -= self.velocity
         
-    def perform_collision_action(self, obj):
-        if obj.slug == slugs.ENEMY:
-            obj.can_delete = True
-            self.can_delete = True
+        self._check_tiles_collisions()
+
