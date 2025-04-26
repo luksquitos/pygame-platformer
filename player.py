@@ -18,7 +18,7 @@ def shoot_bullet(instance, objs_in_memory, collisions):
     key_pressed = pg.key.get_pressed()
     
     if key_pressed[pg.K_SPACE]:
-        objs_in_memory.append(Rock(instance.rect.center[0], instance.rect.center[1]))
+        objs_in_memory.append(Rock((instance.rect.center[0], instance.rect.center[1])))
         instance.attack_delay = Delay(milliseconds=150)
     
 
@@ -34,12 +34,10 @@ class Player(MovingObject):
         key_pressed = pg.key.get_pressed()
         aceleration_x = 1        
         self.collisions = {"up": False, "down": False, "left": False, "right": False}
-
-        if key_pressed[pg.K_w]: # JUMP
-            self.velocity[1] -= 0.5
         
-        # if key_pressed[pg.K_s] :
-        #     self.velocity[1] += 0.5
+        # JUMP
+        if key_pressed[pg.K_w]: 
+            self.velocity[1] -= 0.5
 
         if key_pressed[pg.K_a]:
             self.velocity[0] = -aceleration_x
@@ -47,34 +45,7 @@ class Player(MovingObject):
         if key_pressed[pg.K_d]:
             self.velocity[0] = aceleration_x
 
-        # Move Y
-        self.pos[1] += self.velocity[1]
-        collisions = self.check_collisions(self.tilemap.tiles_around(self.pos))
-        rect = self.rect
-        for collision in collisions:
-            # sleep(0.1)
-            if self.velocity[1] > 0:
-                rect.bottom = collision.rect.top
-            if self.velocity[1] < 0:
-                rect.top = collision.rect.bottom
-            
-            self.velocity[1] = 0
-            self.pos[1] = rect.y
-                
-        # Move X
-        self.pos[0] += self.velocity[0]
-        collisions = self.check_collisions(self.tilemap.tiles_around((self.rect.x, self.rect.y)))
-        rect = self.rect
-        for collision in collisions:
-            if self.velocity[0] > 0:
-                rect.right = collision.rect.left
-            if self.velocity[0] < 0:
-                rect.left = collision.rect.right
-            
-            self.pos[0] = rect.x
-        
-        self.velocity[1] = min(5, self.velocity[1] + 0.1)
-        self.velocity[0] = 0
+        self._check_tiles_collisions()
         
 
 def kill_player(instance, objs_in_memory, collisions):
@@ -97,7 +68,7 @@ class Enemy(MovingObject):
     def generate(cls, size=None):
         from random import randint
         
-        return cls(x_pos=randint(1, 200), y_pos=0, size=size)
+        return cls((randint(1, 200), 0), size=size)
     
     def move(self):
         self.pos[1] += self.velocity

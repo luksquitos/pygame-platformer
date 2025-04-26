@@ -65,8 +65,6 @@ class TileMap:
             if not location in self.objects: # Exists neighborhoods
                 continue
             tiles_around.append(self.objects[location])
-            
-        print(tiles_around)
         
         return tiles_around
             

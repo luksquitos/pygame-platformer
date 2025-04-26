@@ -58,7 +58,7 @@ class Game:
             self.display.fill((14, 219, 248)) # Usado para "limpar a tela"
             # print("Quantidade de objetos na memória ", len(self.objs_in_memory))
             
-            # self.generate_enemies()
+            self.generate_enemies()
             # self.tilemap.update(self.display, self.objects_update)
             
             self.objects_update()

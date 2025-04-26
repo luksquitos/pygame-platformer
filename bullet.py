@@ -23,4 +23,6 @@ class Rock(MovingObject):
     
     def move(self):
         self.pos[1] -= self.velocity
+        
+        self._check_tiles_collisions()
 

@@ -6,6 +6,7 @@ import pygame as pg
 
 from core.images import load_image
 
+
 class Object(ABC):
     frame_path: Literal["str"] = None
     actions: Optional[List] = None
@@ -21,8 +22,6 @@ class Object(ABC):
         
         if not self.frame_path and not surface:
             raise ValueError("Must provide 'frame_path' or existing'surface'")
-        
-        # assert self.slug, f"slug not provided for {self.__class__.__name__}"
         
         self.frame = surface or load_image(self.frame_path, size)
         self.pos = list(pos) # frame position
@@ -97,6 +96,40 @@ class MovingObject(Object):
     
     def move(self) -> None:
         raise NotImplemented(f"move method must be implemented for {self.__class__.__name__}")
+    
+    def _check_tiles_collisions(self):
+        # Prevents moving objects 
+        # of crossing tiles.
+        # Must be called after implementing move()
+        
+        # Move Y
+        self.pos[1] += self.velocity[1]
+        collisions = self.check_collisions(self.tilemap.tiles_around(self.pos))
+        rect = self.rect
+        for collision in collisions:
+            # sleep(0.1)
+            if self.velocity[1] > 0:
+                rect.bottom = collision.rect.top
+            if self.velocity[1] < 0:
+                rect.top = collision.rect.bottom
+            
+            self.velocity[1] = 0
+            self.pos[1] = rect.y
+                
+        # Move X
+        self.pos[0] += self.velocity[0]
+        collisions = self.check_collisions(self.tilemap.tiles_around((self.rect.x, self.rect.y)))
+        rect = self.rect
+        for collision in collisions:
+            if self.velocity[0] > 0:
+                rect.right = collision.rect.left
+            if self.velocity[0] < 0:
+                rect.left = collision.rect.right
+            
+            self.pos[0] = rect.x
+        
+        self.velocity[1] = min(5, self.velocity[1] + 0.1)
+        self.velocity[0] = 0
 
 class StaticObject(Object):
     ...
