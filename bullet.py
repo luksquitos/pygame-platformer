@@ -15,14 +15,12 @@ def kill_enemy(instance, objs_in_memory, collisions):
         obj.can_delete = True
         instance.can_delete = True
 
-class Rock(MovingObject):
+class Bullet(MovingObject):
     frame_path = "projectile.png"
     actions = [kill_enemy]
     slug = slugs.BULLET
-    velocity = 1
+    velocity = [0.5, 0]
     
-    def move(self):
-        self.pos[1] -= self.velocity
-        
-        self._check_tiles_collisions()
-
+    def move(self, tilemap):
+        self.pos[0] += self.velocity[0]
+        # self._check_tiles_collisions(tilemap)

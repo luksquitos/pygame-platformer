@@ -1,11 +1,9 @@
 import pygame as pg
 import slugs
 from objects import StaticObject
-from core.images import load_images
-from core.mixins import LogCollisionMixin
-from objects import StaticObject, Object
-from typing import List
+from core.images import load_images, load_image
 
+from objects import StaticObject
 from random import randint
 from time import sleep
 
@@ -42,23 +40,19 @@ class TileMap:
         """
         self.tile_size = tile_size
         self.tilemap = {} 
+        self.objects = {} # based on location
         self.offgrid_tiles = [] #
         self.assets = {
             "grass": load_images("tiles/grass/"),
             "stone": load_images("tiles/stone/"),
+            "sky": load_image("background.png"),
         }
-        self.objects = {} # based on location
         
         self.generate_map()
         self.create_tile_objects()
         
-    # def update(self, screen, objs):
-    #     for tile_obj in self.objects:
-    #         tile_obj.update(screen, objs)
-        
     def tiles_around(self, pos):
         tile_loc = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
-        # tile_loc_str = f"{tile_loc[0]};{tile_loc[1]}"
         tiles_around = []
         for offset in NEIGHBOUR_OFFSETS:
             location = f"{tile_loc[0] + offset[0]};{tile_loc[1] + offset[1]}"
@@ -68,7 +62,6 @@ class TileMap:
         
         return tiles_around
             
-
     def create_tile_objects(self):
         for loc, tiles in self.tilemap.items():
             surface = self.assets[tiles["type"]][tiles["variant"]]
@@ -80,7 +73,6 @@ class TileMap:
             # self.tilemap_objects.append(TileObject(position[0], position[1], surface))
             self.objects[loc] = TileObject(position, surface)
 
-    
     def generate_map(self):
         for i in range(10):
             self.tilemap[f"{3 + i};10"] = {

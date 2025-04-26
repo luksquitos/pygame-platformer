@@ -1,6 +1,6 @@
 import pygame as pg
 import slugs
-from bullet import Rock
+from bullet import Bullet
 from delay import Delay
 from objects import MovingObject
 from core.settings import DISPLAY_WIDTH, DISPLAY_HEIGHT
@@ -18,7 +18,7 @@ def shoot_bullet(instance, objs_in_memory, collisions):
     key_pressed = pg.key.get_pressed()
     
     if key_pressed[pg.K_SPACE]:
-        objs_in_memory.append(Rock((instance.rect.center[0], instance.rect.center[1])))
+        objs_in_memory.append(Bullet((instance.rect.center[0], instance.rect.center[1])))
         instance.attack_delay = Delay(milliseconds=150)
     
 
@@ -30,7 +30,7 @@ class Player(MovingObject):
     actions = [shoot_bullet]
     collisions = {"up": False, "down": False, "left": False, "right": False}
 
-    def move(self):
+    def move(self, tilemap):
         key_pressed = pg.key.get_pressed()
         aceleration_x = 1        
         self.collisions = {"up": False, "down": False, "left": False, "right": False}
@@ -45,7 +45,7 @@ class Player(MovingObject):
         if key_pressed[pg.K_d]:
             self.velocity[0] = aceleration_x
 
-        self._check_tiles_collisions()
+        self._check_tiles_collisions(tilemap)
         
 
 def kill_player(instance, objs_in_memory, collisions):

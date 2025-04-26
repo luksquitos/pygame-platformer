@@ -55,10 +55,10 @@ class Game:
         
         while True:
             
-            self.display.fill((14, 219, 248)) # Usado para "limpar a tela"
+            self.display.blit(self.tilemap.assets["sky"], (0, 0))
             # print("Quantidade de objetos na memória ", len(self.objs_in_memory))
             
-            self.generate_enemies()
+            # self.generate_enemies()
             # self.tilemap.update(self.display, self.objects_update)
             
             self.objects_update()
@@ -78,7 +78,8 @@ class Game:
             
     def objects_update(self):
         for obj in self.objs_in_memory:
-            obj.update(self.display, self.objs_in_memory, self.tilemap)
+            obj.update(self.objs_in_memory, self.tilemap)
+            obj.render(self.display)
             
             if not obj.can_delete:
                 continue

@@ -1,10 +1,15 @@
 from __future__ import annotations
-from typing import Tuple, List, Optional, Literal
+from typing import Tuple, List, Optional, Literal, TYPE_CHECKING
 from abc import ABC
-from random import randint as r
 import pygame as pg 
 
+# from tile import TileMap
 from core.images import load_image
+
+
+if TYPE_CHECKING:
+    # This is to avoid circular imports.
+    from tile import TileMap
 
 
 class Object(ABC):
@@ -36,14 +41,11 @@ class Object(ABC):
             self.size[1]
         )
             
-    def update(self, screen: pg.Surface, objs_in_memory: List[Object], tilemap) -> None:
-        self.tilemap = tilemap
-        self.objs_in_memory = objs_in_memory
+    def update(self, objs_in_memory: List[Object], tilemap: TileMap) -> None:
         self.perform_actions(objs_in_memory)
-        self.render(screen)
     
-    def render(self, screen: pg.Surface) -> None:
-        screen.blit(self.frame, self.pos)
+    def render(self, display: pg.Surface) -> None:
+        display.blit(self.frame, self.pos)
         
     def check_collisions(self, objs: List[Object]) -> List[Object]:
         objs_copy = objs.copy()
@@ -90,21 +92,21 @@ class MovingObject(Object):
         super().__init__(pos, surface, size)
         assert self.velocity, f"Must provide velocity to {self.__class__.__name__}"
     
-    def update(self, screen, objs_in_memory, tilemap):
-        super().update(screen, objs_in_memory, tilemap)
-        self.move()
+    def update(self, objs_in_memory, tilemap):
+        self.move(tilemap)
+        super().update(objs_in_memory, tilemap)
     
-    def move(self) -> None:
+    def move(self, tilemap: TileMap) -> None:
         raise NotImplemented(f"move method must be implemented for {self.__class__.__name__}")
     
-    def _check_tiles_collisions(self):
+    def _check_tiles_collisions(self, tilemap: TileMap):
         # Prevents moving objects 
         # of crossing tiles.
         # Must be called after implementing move()
         
         # Move Y
         self.pos[1] += self.velocity[1]
-        collisions = self.check_collisions(self.tilemap.tiles_around(self.pos))
+        collisions = self.check_collisions(tilemap.tiles_around(self.pos))
         rect = self.rect
         for collision in collisions:
             # sleep(0.1)
@@ -118,7 +120,7 @@ class MovingObject(Object):
                 
         # Move X
         self.pos[0] += self.velocity[0]
-        collisions = self.check_collisions(self.tilemap.tiles_around((self.rect.x, self.rect.y)))
+        collisions = self.check_collisions(tilemap.tiles_around((self.rect.x, self.rect.y)))
         rect = self.rect
         for collision in collisions:
             if self.velocity[0] > 0:
